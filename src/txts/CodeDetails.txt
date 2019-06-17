@@ -1,0 +1,31 @@
+- We need the SelfNode to add semantic for the work with SELF_TYPE.
+- The class ObjectNode in the ast_hierarchy is for (Instances of classes are objects)
+
+
+- SELF_TYPE is the type of the self variable.
+- SELF_TYPE may be used in the following palces: 
+    - new SELF_TYPE
+    - (ok)as the return type of a method
+    - as the declared type of a let variable
+    - (ok)as the declared type of an attribute
+
+- When a new object of a class is created, all of the inherited and local attribute must be initialized.
+- Inherited attributes are initialized first in inheritance order beginning with the attributes of the greater 
+ancestor class.
+- Within a given class, attributes are initialized in the order they appear in the source text.
+
+- ??? A way to create a void value is to store the result of a while loop.
+
+- SELF_TYPE type_checker:
+    1) SELF_TYPEc <= SELF_TYPEc
+    2) SELF_TYPEc <= T if C <= T
+    3) T <= SELF_TYPEc always False *there is a tricky case when T conforms with C and T is a leave of the inheritance tree, but we wouldn't deal with that case
+    4) T <= T' *according to the rules from before
+
+    Let T and T' be aby types but SELF_TYPE:
+    1) lca(SELF_TYPEc,SELF_TYPEc) = SELF_TYPEc
+    2) lca(SELF_TYPEc,T) = lca(C,T) *this is the best we can do because SELF_TYPEc <= C
+    3) lca(T, SELF_TYPEc) = lca(C,T)
+    4) lca(T,T') *defined as before
+
+- Every let expression must introduce at least one identifier

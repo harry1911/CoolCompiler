@@ -1,0 +1,92 @@
+Lexer checks:
+    - Strings: # TODO:
+        - String constants may be at most 1024 characteres long.
+    - Comments: # TODO:
+
+    - White Space: # TODO:
+
+Semantic checks:
+-(ok) Classes may not be redefined.
+
+-(ok) Attributes and Methods can't be defined multiple times in a class(but they can have the same name).
+
+- Inheritance: class C inherits P { ... }
+    -(ok) C has all the features defined in P in addition to its own features.
+    -(ok) It illegal to redefine attributes.
+    -(ok) Methods can be redefined with the same signature: same number of arguments, formal parameters types and return type.
+    -(ok) Single inheritance: a class can inherit only from a single class.
+    -(ok) The graph defined by the parent-child relation on classes must be a tree with Object as the root.
+    -(ok) It is an error to redefine the basic class: Object, IO, Int, String, Bool.
+    -(ok) A class can inherit from Object or IO, but not from Int, String or Bool.
+
+- Main:
+    -(ok) Every program must have a class Main.
+    -(ok) The Main class must have a main method that takes no formal parameters.
+    -(ok) The main method must be defined in class Main, not inherited from another class.
+
+- SELF_TYPE: this type is used to refer to the type of the self variable.
+    - SELF_TYPE may be used in the following places: 
+        1)(ok) new SELF_TYPE
+        2)(ok) as the return type of a method
+        3)(ok) as the declared type of a let variable
+        4)(ok) as the declared type of an attribute
+
+    - SELF_TYPE type_checker:
+        1) SELF_TYPEc <= SELF_TYPEc
+        2) SELF_TYPEc <= T if C <= T
+        3) T <= SELF_TYPEc always False *there is a tricky case when T conforms with C and T is a leave of the inheritance tree, but we wouldn't deal with that case
+        4) T <= T' *according to the rules from before
+
+        Let T and T' be aby types but SELF_TYPE:
+        1) lca(SELF_TYPEc,SELF_TYPEc) = SELF_TYPEc
+        2) lca(SELF_TYPEc,T) = lca(C,T) *this is the best we can do because SELF_TYPEc <= C
+        3) lca(T, SELF_TYPEc) = lca(C,T)
+        4) lca(T,T') *defined as before
+
+- Methods:
+    -(ok) There may be zero or more formal parameters.
+    -(ok) The identifiers used in the formal parameter list must be distinct.
+    -(ok) A formal parameter hides any definition of an attribute of the same.
+
+- Identifiers:
+    - Names of local variables, formal parameters of methods, self, and class attributes are all expressions.
+    - The identifier self may be referenced, but it is an error:
+        1)(ok) To assign to self.
+        2)(ok) To bind self in a let.
+        3)(ok) To bind self in a case.
+        4)(ok) To bind self as a formal parameter of a method.
+        5)(ok) To have attributes named self.
+
+- Block:
+    -(ok) Every block has at least one expression.
+
+- Let:
+    -(ok) If an identifier is defined multiple times in a let, latter bindings hide earlier ones.
+    -(ok) Identifiers introduced by let also hide any definitions for the same names in containing scopes.
+    -(ok) Every let expression must introduce at least one identifier.
+
+- Case: 
+    -(ok) Every case expression must have at least must have at least one branch.
+    -(ok) The identifier <id> introduced by a branch of a case hides any variable or attribute definition for <id> visible in the containing scope.
+
+*** Check in the the type collector:
+-(ok) Class may not be redefined.
+
+*** Check in the the type builder:
+-(ok) No method name may be defined multiple times in a class, and no attribute may be defined multiple 
+times in a class, but a method and an attribute may have the same name.
+-(ok) It is ilegal to have attributes named self.
+
+*** Check in the graph of types after the type builder:
+-(ok) A class may inherit only from a single class.
+-(ok) This graph may not contain cycles.
+-(ok) The semantics of C inherits P is that C has all of the features deﬁned in P in addition to its own features.
+-(ok) In the case that a parent and child both deﬁne the same method name, then the deﬁnition given in the child 
+class takes precedence. It is illegal to redeﬁne attribute names.
+-(ok) If a class C inherits a method f from an ancestor class P, then C may override the inherited definition of f
+provided the number of arguments, the types of the formal parameters, and the return type are exactly the 
+same in both definitions.
+
+*** Check after the type checker:
+-(ok) Every program must have a class Main. Furthermore, the Main class must have a method main that takes no 
+formal parameters. The main method must be deﬁned in class Main (not inherited from another class).

@@ -1,0 +1,84 @@
+PROGRAM := CLASS ';' CLASS_LIST
+
+CLASS_LIST := CLASS ';' CLASS_LIST
+            | EPSILON
+
+CLASS := 'CLASS' TYPE_ID INHERITS '{' FEATURE_LIST '}'
+
+INHERITS := 'INHERITS' TYPE_ID
+		  | EPSILON
+
+FEATURE_LIST := FEATURE_ATTR ';' FEATURE_LIST
+			  | FEATURE_METHOD ';' FEATURE_LIST
+              | EPSILON
+
+FEATURE_ATTR := OBJECT_ID ':' TYPE_ID
+			  | OBJECT_ID ':' TYPE_ID '<-' EXPRESSION
+
+FEATURE_METHOD := OBJECT_ID '(' FORMAL_LIST ')' ':' TYPE_ID '{' EXPRESSION '}'
+
+FORMAL_LIST := FORMAL MORE_FORMAL_LIST
+             | EPSILON
+
+MORE_FORMAL_LIST := ',' FORMAL MORE_FORMAL_LIST
+             | EPSILON
+
+FORMAL := OBJECT_ID ':' TYPE_ID
+
+EXPRESSION_LIST := EXPRESSION MORE_EXPRESSION_LIST
+                 | EPSILON
+
+MORE_EXPRESSION_LIST := ',' EXPRESSION MORE_EXPRESSION_LIST
+                      | EPSILON
+
+BLOCK_EXPRESSION_LIST := EXPRESSION ';' BLOCK_EXPRESSION_LIST
+                       | EXPRESSION ';'
+
+LET_EXPRESSIONS := OBJECT_ID ':' TYPE_ID LET_LIST
+				 | OBJECT_ID ':' TYPE_ID '<-' EXPRESSION LET_LIST
+
+LET_LIST := ',' OBJECT_ID ':' TYPE LET_LIST
+		  | ',' OBJECT_ID ':' TYPE '<-' EXPRESSION LET_LIST
+          | EPSILON
+
+BRANCH_LIST := BRANCH BRANCH_LIST
+             | BRANCH
+
+BRANCH := OBJECT_ID ':' TYPE_ID '=>' EXPRESSION ';'
+
+EXPRESSION := OBJECT_ID '<-' EXPRESSION													# Assign
+            | EXPRESSION '@' TYPE_ID '.' OBJECT_ID '(' EXPRESSION_LIST ')'              # Static Dispatch
+            | EXPRESSION '.' OBJECT_ID '(' EXPRESSION_LIST ')'                          # Dynamic Dispatch
+
+            | OBJECT_ID '(' EXPRESSION_LIST ')'                                         # SelfDynamicDispatch
+
+            | 'IF' EXPRESSION 'THEN' EXPRESSION 'ELSE' EXPRESSION 'FI'					# IF
+            | 'WHILE' EXPRESSION 'LOOP' EXPRESSION 'POOL'								# WhileLoop
+
+            | '{' BLOCK_EXPRESSION_LIST '}'												# Block
+
+			| 'LET' LET_EXPRESSSIONS IN EXPRESSION										# LetIn
+
+            | 'CASE' EXPRESSION 'OF' BRANCH_LIST 'ESAC'									# Case
+            
+			| '(' EXPRESSION ')'														# ??? (Not in AST)
+            | OBJECT_ID																	# Object
+			
+			** Binary Operations
+            | EXPRESSION '+' EXPRESSION
+            | EXPRESSION '-' EXPRESSION
+            | EXPRESSION '*' EXPRESSION
+            | EXPRESSION '/' EXPRESSION
+			| EXPRESSION '<' EXPRESSION
+            | EXPRESSION '<=' EXPRESSION
+            | EXPRESSION '=' EXPRESSION
+			** Unary Operations
+            | '~' EXPRESSION
+            | 'NOT' EXPRESSION
+			| 'ISVOID' EXPRESSION
+			** Atomic
+			| 'NEW' TYPE_ID																# NewObject
+            | 'INTEGER'
+            | 'STRING'
+            | 'BOOLEAN'
+

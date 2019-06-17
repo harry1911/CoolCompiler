@@ -1,0 +1,67 @@
+﻿-Classes:
+    -Class definition:
+    class <type> [ inherits <type> ] {
+        <feature_list>
+    };
+
+    -Class names begins with an uppercase letter.
+
+    -Cool support information hiding through a simple mechanism: all attributes have scope local to 
+    the class, and all methods have global scope. Thus the only way to provide access to object 
+    state in Cool is through methods.
+
+    -Feature names must begin with a lowercase letter. No method name may be defined multiple times 
+    in a class, and no attribute name may be defined multiple times in a class, but a method and an 
+    attribute may have the same name.
+
+    -The semantics of C inherits P is that C has all of the features defined in P in addition to its 
+    own features.
+
+    -In the case that a parent and child both define the same method name, then the definition 
+    given in the child class takes precedence. It is illegal to redefine attribute names.
+
+    -A class may inherit only from a single class. The parent-child relation on classes defines a 
+    graph. This graph may not contain cycles. If both of these restrictions are satisfied, then the 
+    inheritance graph forms a tree with Object as the root.
+
+-Types:
+    -SELF_TYPE: The type SELF TYPE is used to refer to the type of the self variable. SELF_TYPE may
+    be used in the following places: new SELF TYPE, as the return type of a method, as the declared
+    type of a let variable, or as the declared type of an attribute.
+
+-Void: 
+    -The only way to create a void value is to declare a variable of some class other than Int, 
+    String, or Bool and allow the default initialization to occur, or to store the result of a 
+    while loop.
+
+-String constants may be at most 1024 characters long. 
+
+
+Semantic Rules:(check)
+
+- All class names are globally visible.
+- All sttributes have scope local to the class and all methods have global scope.
+
+
+*** Check in the the type collector:
+-(ok) Class may not be redefined.
+
+*** Check in the the type builder:
+-(ok) No method name may be defined multiple times in a class, and no attribute may be defined multiple 
+times in a class, but a method and an attribute may have the same name.
+-(ok) It is ilegal to have attributes named self.
+
+*** Check in the graph of types after the type builder:
+-(ok) A class may inherit only from a single class.
+-(ok) This graph may not contain cycles.
+-(ok) The semantics of C inherits P is that C has all of the features deﬁned in P in addition to its own features.
+-(ok) In the case that a parent and child both deﬁne the same method name, then the deﬁnition given in the child 
+class takes precedence. It is illegal to redeﬁne attribute names.
+-(ok) If a class C inherits a method f from an ancestor class P, then C may override the inherited definition of f
+provided the number of arguments, the types of the formal parameters, and the return type are exactly the 
+same in both definitions.
+
+*** Check after the type checker:
+-(ok) Every program must have a class Main. Furthermore, the Main class must have a method main that takes no 
+formal parameters. The main method must be deﬁned in class Main (not inherited from another class).
+- ???? Main class can inherits from ohter class apart of object.(yes, for exmple: form IO)

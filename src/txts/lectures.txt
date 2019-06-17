@@ -1,0 +1,34 @@
+########## Semantic Analysis ##########
+
+# Check of many kinds ... coolc checks:
+1. All identifiers are declared
+2. Types
+3. Inheritance relationships
+4. Classes defined only once
+5. Methods in a class defined only once
+6. Reserved identified are not misused
+And others...
+
+Cool Identidiers bindings are introduced by:
+-Class declarations(introduce class names)
+    -Cannot be nested
+    -Are globally visible throughout the program
+    -A class name can be used before it is defined
+-Method definitions(introduce method names)
+    -A method need not be defined in the class in which it is used, but on some parent class
+    -Methods may also be redefined(overridden) 
+-Let expressions(introduce object id's)
+-Formal parameters(introduce object id's)
+-Attribute definitions(introduce object id's)
+    -Attribute names are global within the class in which they are defined 
+-Case expressions(introduce object id's)
+
+The types in Cool are:
+-Class names
+-SELF_TYPE
+
+Build-in types:
+-Void, Object, Int, Bool, String 
+
+Type checking: is the process of verifying fully typed programs
+Type inference: is the process of filling in missing type information  
